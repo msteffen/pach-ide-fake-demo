@@ -6,16 +6,16 @@ if [[ "${1}" == "--script" ]]; then
 fi
 
 function pretend {
-  msg="${1}"
+  cmd="${1}"
   output="${2}"
 
   if [[ "${SCRIPT}" == "true" ]]; then
-    if [[ -n "${msg}" ]]; then
-      echo "${msg}"
+    if [[ -n "${cmd}" ]]; then
+      echo "${cmd}"
     fi
     return
   fi
-  if [[ -z "${msg}" ]]; then
+  if [[ -z "${cmd}" ]]; then
     if [[ -n "${output}" ]]; then
       echo "${output}"
     fi
@@ -36,8 +36,8 @@ function pretend {
       echo
       break
     fi
-    if [[ i -lt "${#msg}" ]]; then
-      printf "${msg:i:1}"
+    if [[ i -lt "${#cmd}" ]]; then
+      printf "${cmd:i:1}"
       i="$((i+1))"
     fi
   done

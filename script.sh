@@ -36,7 +36,7 @@ function pretend {
       echo
       break
     fi
-    if [[ i -lt "${#cmd}" ]]; then
+    if [[ "${i}" -lt "${#cmd}" ]]; then
       printf "${cmd:i:1}"
       i="$((i+1))"
     fi

@@ -17,7 +17,7 @@ function pretend {
   fi
   if [[ -z "${msg}" ]]; then
     if [[ -n "${output}" ]]; then
-      echo -n "${output}"
+      echo "${output}"
     fi
     return
   fi
@@ -41,18 +41,16 @@ function pretend {
       i="$((i+1))"
     fi
   done
-  echo -n "${output}"
+  echo "${output}"
 }
 
 pretend "pachctl list repo" "\
 NAME  CREATED       SIZE (MASTER) DESCRIPTION
-input 7 minutes ago 74B
-"
+input 7 minutes ago 74B"
 pretend "pachctl list file input@master:/" "\
 NAME         TYPE SIZE
 /datum1.json file 37B
-/datum2.json file 37B
-"
+/datum2.json file 37B"
 pretend "cat pipeline.yaml" "\
 pipeline:
   name: example
@@ -66,19 +64,15 @@ transform:
   # - Pipeline is updated when branch is updated
   # - Default branch is "master", but can specify others
   git:      github.com/msteffen/test-pipeline
-  language: python
-"
+  language: python"
 
 pretend "pachctl preview -f pipeline.json"
 echo -n "Copy ssh keys into preview container? y/N "
 pretend "y"
-pretend "" "Starting preview container...
-"
+pretend "" "Starting preview container..."
 [[ "${SCRIPT}" != "true" ]] && sleep 4
-pretend "" "Starting port-forward. If connection is dropped, restart port-forward with:
-"
-pretend "" "  kubectl port-forward preview-pipeline-example-56b11 30022:22 30888:8888 &
-"
+pretend "" "Starting port-forward. If connection is dropped, restart port-forward with:"
+pretend "" "  kubectl port-forward preview-pipeline-example-56b11 30022:22 30888:8888 &"
 [[ "${SCRIPT}" != "true" ]] && sleep 1
 # Design note: this will only work for github pipelines, because the standard
 # python container has this user in it. Alternatively, if we try to inject sshd
@@ -87,7 +81,6 @@ pretend "" "\
 Run the following command for ssh access:
   ssh ssh://user@localhost:30222
 Access Jupyter at:
-  http://localhost:30888
-"
+  http://localhost:30888"
 
 stty echo cooked

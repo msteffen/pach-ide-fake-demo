@@ -1,8 +1,26 @@
 #!/bin/bash
 
+# If --script is set, print the commands to be run rather than interacting
+if [[ "${1}" == "--script" ]]; then
+  SCRIPT=true
+fi
+
 function pretend {
   msg="${1}"
   output="${2}"
+
+  if [[ "${SCRIPT}" == "true" ]]; then
+    if [[ -n "${msg}" ]]; then
+      echo "${msg}"
+    fi
+    return
+  fi
+  if [[ -z "${msg}" ]]; then
+    if [[ -n "${output}" ]]; then
+      echo -n "${output}"
+    fi
+    return
+  fi
 
   echo -en "\e[1;32mmjs@mjs-XPS-15-9550\e[0;1m \u00bb\e[0m "
   i=0
@@ -23,7 +41,7 @@ function pretend {
       i="$((i+1))"
     fi
   done
-  echo -n "${2}"
+  echo -n "${output}"
 }
 
 pretend "pachctl list repo" "\
@@ -54,19 +72,22 @@ transform:
 pretend "pachctl preview -f pipeline.json"
 echo -n "Copy ssh keys into preview container? y/N "
 pretend "y"
-echo Starting preview container...
-sleep 4
-echo "Starting port-forward. If connection is dropped, restart port-forward with:"
-echo "  kubectl port-forward preview-pipeline-example-56b11 30022:22 30888:8888 & "
-sleep 1
+pretend "" "Starting preview container...
+"
+[[ "${SCRIPT}" != "true" ]] && sleep 4
+pretend "" "Starting port-forward. If connection is dropped, restart port-forward with:
+"
+pretend "" "  kubectl port-forward preview-pipeline-example-56b11 30022:22 30888:8888 &
+"
+[[ "${SCRIPT}" != "true" ]] && sleep 1
 # Design note: this will only work for github pipelines, because the standard
 # python container has this user in it. Alternatively, if we try to inject sshd
 # into the container, we could configure it to allow root login?
-cat <<EOF
+pretend "" "\
 Run the following command for ssh access:
   ssh ssh://user@localhost:30222
 Access Jupyter at:
   http://localhost:30888
-EOF
+"
 
 stty echo cooked

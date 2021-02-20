@@ -52,20 +52,7 @@ pretend "pachctl list file input@master:/" "
 NAME         TYPE SIZE
 /datum1.json file 37B
 /datum2.json file 37B"
-pretend "cat pipeline.yaml" "\
-pipeline:
-  name: example
-description: An example github pipeline
-input:
-  pfs:
-    glob: /*
-    repo: input
-transform:
-  # - Like build pipelines, but files come from github
-  # - Pipeline is updated when branch is updated
-  # - Default branch is "master", but can specify others
-  git:      github.com/msteffen/test-pipeline
-  language: python"
+pretend "cat pipeline.yaml" "$(cat pipeline.yaml)"
 
 pretend "pachctl preview -f pipeline.json"
 echo -n "Copy ssh keys into preview container? y/N "

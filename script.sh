@@ -26,12 +26,10 @@ function pretend {
     echo -en "\e[1;32mmjs@mjs-XPS-15-9550\e[0;1m \u00bb\e[0m "
   fi
   i=0
+  stty -echo raw
   while true; do
-    stty -echo raw
     c="$(dd bs=1 count=1 2>/dev/null)"
-    stty echo cooked
     if [[ "${c}" == $'\003' ]] || [[ "${c}" == $'\004' ]]; then # \003/4 = ^C/^D
-      stty echo cooked
       exit 1
     fi
     if [[ "${c}" == $'\r' ]]; then
@@ -43,7 +41,8 @@ function pretend {
       i="$((i+1))"
     fi
   done
-  echo "${output}"
+  stty echo cooked
+  echo -e "\e[G${output}"
 }
 
 pretend "pachctl list repo" "\

@@ -42,13 +42,13 @@ function pretend {
     fi
   done
   stty echo cooked
-  echo -e "\e[G${output}"
+  echo -e "\e[G${output#$'\n'}"
 }
 
-pretend "pachctl list repo" "\
+pretend "pachctl list repo" "
 NAME  CREATED       SIZE (MASTER) DESCRIPTION
 input 7 minutes ago 74B"
-pretend "pachctl list file input@master:/" "\
+pretend "pachctl list file input@master:/" "
 NAME         TYPE SIZE
 /datum1.json file 37B
 /datum2.json file 37B"
@@ -78,7 +78,7 @@ pretend "" "  kubectl port-forward preview-pipeline-example-56b11 30022:22 30888
 # Design note: this will only work for github pipelines, because the standard
 # python container has this user in it. Alternatively, if we try to inject sshd
 # into the container, we could configure it to allow root login?
-pretend "" "\
+pretend "" "
 Run the following command for ssh access:
   ssh ssh://user@localhost:30222
 Access Jupyter at:

@@ -22,7 +22,9 @@ function pretend {
     return
   fi
 
-  echo -en "\e[1;32mmjs@mjs-XPS-15-9550\e[0;1m \u00bb\e[0m "
+  if [[ "${cmd}" != "y" ]]; then
+    echo -en "\e[1;32mmjs@mjs-XPS-15-9550\e[0;1m \u00bb\e[0m "
+  fi
   i=0
   while true; do
     stty -echo raw
